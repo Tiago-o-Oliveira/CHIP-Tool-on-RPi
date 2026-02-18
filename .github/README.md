@@ -1,1 +1,1 @@
-../CHIP-Tool Test On Raspberry Pi.md 
+../CHIP-Tool-Test-On-Raspberry-Pi.md
