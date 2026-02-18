@@ -1,1 +1,0 @@
-../CHIP-Tool-Test-On-Raspberry-Pi.md
