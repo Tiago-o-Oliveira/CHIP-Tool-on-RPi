@@ -1,6 +1,10 @@
 This Document describes a simple setup where a Linux Host communicating with a RCP forms a Matter Fabric, it is based on [Matter Over Thread Demo](https://siliconlabs.github.io/matter/latest/nav_4_thread.html)from Silabs.
 
-![[Pasted image 20260218104240.png|center]]
+
+<p align="center">
+  <img src="Images/Pasted%20image%2020260218104240.png" alt="Setup overview">
+</p>
+
 ### Pre-Requisites
 #### Software
 - [Balena etcher](https://etcher.balena.io/);
@@ -39,12 +43,20 @@ In this example the sample "Sensor Example" was chose since it expose several di
 
 ### Finding The Raspberry IP
 Once Everything is Flashed, connect everything as described on the image on the top of this page, the test setup looks like this:
-![[WhatsApp Image 2026-02-18 at 14.25.58 1.jpeg|center|500]]
+<p align="center">
+  <img src="Images/WhatsApp%20Image%202026-02-18%20at%2014.25.58%201.jpeg"
+       alt="Physical test setup"
+       width="500">
+</p>
+
 The Gray cable is going to the internet router and the black goes to the 5V source.
 
 
 Now run the command on the Remote Terminal (A PC running ubuntu in this test) and run the command ```ip a``` this should return the list of network adapters, and their parameters, in my case it is wlp1s0, inside your adapter parameters, search for the *inet* value, copy it and paste it on the command ```nmap pasteInetHere``` this will return all the ips find in the same network of your computer (if not obvious yet, the PC and the raspberry must be attached to the same network), the command response looks like this:
-![[Pasted image 20260218144017.png|350]]
+<img src="Images/Pasted%20image%2020260218144017.png"
+     alt="nmap network scan output"
+     width="350">
+
 
 In this case i've probed it and now that 192.168.1.12 is my raspberry IP, Silicon describes [another method of  finding raspberry IP](https://siliconlabs.github.io/matter/latest/general/FIND_RASPI.html) but be aware that your network adapter may not support raw ARP, in this case, like mine, if your network is small you can probe all the IPs found until you find the right one.
 ### Connecting To Raspberry Via SSH
@@ -52,12 +64,18 @@ In this case i've probed it and now that 192.168.1.12 is my raspberry IP, Silico
 Once figured the IP, run this command on the remote terminal ```ssh ubuntu@192.168.1.12``` with your raspberry IP, the terminal will prompt you for a password, for this first access, the password is ubuntu . Once you type the password, it will prompt for a password change, choose your password and for now on, every time you access the raspberry via ssh, use the new password.
 
 After logging again, you may see this screen:
-![[Pasted image 20260218145610.png|400]]
+<p align="center">
+  <img src="Images/Pasted%20image%2020260218145610.png"
+       alt="SSH login successful screen"
+       width="400">
+</p>
+
 It means we're in, now for the fun part.
 ### Starting the Matter Fabric
 If the setup is going well so far, it's time to poke it to see if thats 100% true. First we can probe the otbr-agent who is responsible for communicating with the rcp and managing the OpenThread network, to do so, run the command ```sudo systemctl status otbr-agent```, if the response says it's active, like this:
 
-![[Pasted image 20260218150026.png]]
+![otbr-agent active status](Images/Pasted%20image%2020260218150026.png)
+
 
 Then everything is alright, if it says otherwise, try this command:
 ```bash
@@ -84,7 +102,8 @@ mattertool bleThread
 
 If everything is right, after a quadrillion lines of information we aren't diving in now, you should see:
 
-![[Pasted image 20260218151502.png]]
+![Matter device successfully commissioned](Images/Pasted%20image%2020260218151502.png)
+
 
 The device is now on the fabric and, although the Matter-Tool is very useful and more of it can be learned at the [documentation](https://siliconlabs.github.io/matter/latest/thread/CHIP_TOOL.html), this test will need bigger guns.
 ### Listening Devices With CHIP-Tool
@@ -96,14 +115,16 @@ First, we must find where chiptool lies, by running the command
 echo $CHIPTOOL_PATH
 ```
 
-![[Pasted image 20260218152347.png]]
+![CHIPTOOL_PATH environment variable output](Images/Pasted%20image%2020260218152347.png)
+
 
 We then go to the given directory
 ```bash
 cd /home/ubuntu/connectedhomeip/out/standalone/
 ```
 
-![[Pasted image 20260218152443.png]]
+![chip-tool directory contents](Images/Pasted%20image%2020260218152443.png)
+
 
 in this folder we can use the chiptool commands, as a test, run the command ```./chip-tool``` it should print a list of all supported clusters.
 
@@ -126,6 +147,7 @@ occupancysensing subscribe occupancy 5 10 31369 1
 
 Now every time the occupancy parameter changes on the sensor, the terminal shows the following message:
 
-![[Pasted image 20260218163857.png]]
+![Occupancy sensing subscription updates](Images/Pasted%20image%2020260218163857.png)
+
 
 As a final note, when testing this last bit, i got a problem with the mDNS server running on the controller, after much much hassle, resetting the raspberry fixed it, but it should be noticed.
